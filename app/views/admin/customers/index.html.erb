@@ -1,0 +1,13 @@
+<h2>会員一覧</h2>
+<% @customers.each do |customer| %>
+ <%= customer.id %>
+ <%= link_to admin_customer_path(customer),class: 'text-primary' do %>
+  <%= customer.last_name %> <%= customer.first_name %>
+ <% end %>
+ <%= customer.email %>
+ <% if customer.is_deleted == true %>
+  退会済
+ <% else %>
+  有効
+ <% end %>
+<% end %>

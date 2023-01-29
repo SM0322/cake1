@@ -1,0 +1,38 @@
+<table>
+ <tr>
+  <td>商品名</td>
+  <td><%= @item.name %></td>
+ </tr>
+ 
+ <tr>
+  <td>商品説明</td>
+  <td><%= @item.introduction %></td>
+ </tr>
+ 
+ <tr>
+  <td>価格</td>
+  <td><%= to_total_currency(@item.price) %></td>
+ </tr>
+ 
+ <tr>
+  <td>販売ステータス</td>
+  <td>
+  <% if @item.is_active %>
+   <p>販売停止中</p>
+  <% else %>
+   <p>販売中</p>
+  <% end %>
+  </td>
+ </tr>
+</table>
+
+ #個数を決定するところ
+<% if @item.is_active && current_customer %>
+ <%= form_with moddel:@cart, url: cart_items_path, method: :post do |f| %>
+ <%= f.select :amount, *[1..10],{include_blank: '個数選択'} %>
+ <%= f.hidden_field :item_id, :value => @item.id %>
+ <%= f.submit "カートに入れる" %>
+ <% end %>
+<% else %>
+ <p>販売停止中</p>
+<% end %>
