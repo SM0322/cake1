@@ -28,11 +28,11 @@
 
  #個数を決定するところ
 <% if @item.is_active && current_customer %>
- <%= form_with moddel:@cart, url: cart_items_path, method: :post do |f| %>
- <%= f.select :amount, *[1..10],{include_blank: '個数選択'} %>
- <%= f.hidden_field :item_id, :value => @item.id %>
- <%= f.submit "カートに入れる" %>
- <% end %>
+  <p>販売停止中</p>
 <% else %>
- <p>販売停止中</p>
+ <%= form_with moddel:@cart, url: cart_items_path, method: :post do |f| %>
+  <%= f.select :amount, *[1..10],{include_blank: '個数選択'} %>
+  <%= f.hidden_field :item_id, :value => @item.id %>
+  <%= f.submit "カートに入れる" %>
+ <% end %>
 <% end %>

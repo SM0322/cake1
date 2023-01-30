@@ -1,4 +1,17 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    get 'homes/top'
+  end
+  namespace :admin do
+    get 'orders/show'
+  end
+  namespace :public do
+    get 'orders/new'
+    get 'orders/confirm'
+    get 'orders/complete'
+    get 'orders/index'
+    get 'orders/show'
+  end
   namespace :public do
     get 'cart_items/index'
   end
@@ -42,7 +55,8 @@ devise_for :customers,skip: [:passwords], controllers: {
 }
 
 scope module: :public do
-    resources :cart_items, only: [:index, :create, :update, :destroy, :destroy_all]
+    delete 'cart_items/destroy_all', to: 'cart_items#destroy_all', as: 'destroy_all'
+    resources :cart_items, only: [:index, :create, :update, :destroy]
     resources :items, only: [:index, :show]
     resources :deliveries, only: [:new, :create, :index, :edit, :update, :destroy]
     root to: "homes#top"
@@ -52,6 +66,9 @@ scope module: :public do
     patch 'customers/information' => 'customers#update', as: 'update_customer'
     get 'customers/unsubscribe' => 'customers#unsubscribe', as: 'unsubscribe'
     patch 'customers/withdrawal' => 'customers#withdrawal', as: 'withdrawal'
+    get 'orders/complete', to: 'orders#complete', as: 'complete'
+    post 'orders/comfirm', to: 'orders#confirm', as: 'confirm'
+    resources :orders, only: [:index, :show, :create, :new]
   end
 
 # 管理者用
@@ -64,6 +81,8 @@ namespace :admin do
   resources :items, only: [:index, :new, :create, :show, :edit, :update]
   resources :genres, only: [:index, :edit, :create, :update]
   resources :customers, only: [:index, :edit, :show, :update]
+  resources :orders, only: [:show, :update]
+  resources :order_items, only: [:update]
   get '/' => 'homes#top'  
 end
 end

@@ -1,0 +1,59 @@
+<h2>注文履歴詳細</h2>
+
+<div>
+ <p>購入者</p><p><%= link_to @order.name, admin_customer_path(@order.customer) %></p>
+ <p>注文日</p><p><%= @order.created_at%></p>
+ <p>配送先</p><p>〒<%= @order.post_code%> <%= @order.address%></p>
+ <p>支払方法</p><p><%= @order.payment_method_i18n %></p>
+</div>
+
+<h2>ステータス編集フォーム</h2>
+<div>
+ <%= form_with model: @order, url: admin_order_path, method: :patch do |f| %>
+  <%= f.select :status, Order.statuses_i18n.keys.map { |k| [I18n.t("enums.order.status.#{k}"), k] } %>
+  <%= f.submit "更新", class: 'btn btn-success' %>
+ <% end %>
+</div>
+
+<h2>注文詳細</h2>
+<table>
+ <tr>
+  <th>商品名</th>
+  <th>単価（税込）</th>
+  <th>数量</th>
+  <th>小計</th>
+  <th>製作ステータス</th>
+  <th></th>
+ </tr>
+ 
+ <% @order_item.each do |order_item| %>
+  <tr>
+   <td><%= order_item.item.name %></td>
+   <td><%= order_item.item.with_tax_price %></td>
+   <td><%= order_item.amount %></td>
+   <td><%= order_item.subtotal %></td>
+   <%= form_with model: order_item, url: admin_order_item_path(order_item.id), method: :patch do |f| %>
+    <td><%= f.select :making_status, OrderItem.making_statuses_i18n.keys.map { |k| [I18n.t("enums.order_item.making_status.#{k}"), k] } %></td>
+    <td><%= f.submit "更新" %></td>
+   <% end %> 
+   </td>
+  </tr>
+ <% end %>
+</table>
+
+<table>
+ <tr>
+  <td>送料</td>
+  <td><%= @order.postage %></td>
+ </tr>
+ 
+ <tr>
+  <td>合計金額</td>
+  <td><%= @total %></td>
+ </tr> 
+ 
+ <tr>
+  <td>請求金額</td>
+  <td><%= @order.total_payment = @order.postage + @total %></td>
+ </tr> 
+</table>

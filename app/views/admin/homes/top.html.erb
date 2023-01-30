@@ -1,0 +1,23 @@
+<h2>注文履歴一覧</h2>
+<table>
+ <tr>
+  <th>購入日時</th>
+  <th>購入者</th>
+  <th>注文個数</th>
+  <th>注文ステータス</th>
+ </tr>
+ 
+ <% @orders.each do |order| %>
+  <% total = 0 %>
+  <% order.order_items.each do |order_item| %>
+   <% total += order_item.amount %>
+  <% end %>
+  
+ <tr>
+  <td><%= link_to order.created_at, admin_order_path(order.id) %></td>
+  <td><%= order.name %></td>
+  <td><%= total %></td>
+  <td><%= order.status_i18n %></td>
+ </tr>
+ <% end %>
+</table>
